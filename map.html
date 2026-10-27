@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>DisasterShield AI | Risk Map</title>
+
+  <!-- 1. Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  >
+
+  <!-- 2. Page CSS -->
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: #101d30;
+      --line: #263851;
+      --text: #eaf2ff;
+      --muted: #9fb0c8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.15rem, 3vw, 1.65rem);
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button, select, input {
+      font: inherit;
+      color: var(--text);
+      background: #17263b;
+      border: 1px solid #344963;
+      border-radius: 9px;
+      padding: 10px 12px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    #map {
+      min-height: 68vh;
+      height: calc(100vh - 145px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    aside {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .status {
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: #142a3d;
+      color: #cce9ff;
+      margin: 12px 0;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .alert-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .alert-card h3 {
+      margin: 0 0 7px;
+      font-size: 0.95rem;
+    }
+
+    .alert-card p {
+      margin: 5px 0;
+      color: #c4d0e2;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #23384f;
+      color: #cce9ff;
+      font-size: 0.72rem;
+      margin-bottom: 7px;
+    }
+
+    .legend,
+    .small {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    a {
+      color: #6de5d5;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      #map {
+        height: 55vh;
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 3. Header and buttons -->
+  <header>
+    <div>
+      <h1>🛡️ DisasterShield AI — Risk Map</h1>
+      <div class="sub">
+        NDMA SACHET alert visualization • recognized place
+        mentions may be mapped automatically
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="backBtn" type="button">
+        ← Dashboard
+      </button>
+
+      <button id="refreshBtn" type="button">
+        ↻ Refresh alerts
+      </button>
+    </div>
+  </header>
+
+  <!-- 4. Main map and alert sidebar -->
+  <main>
+    <section>
+      <div
+        id="map"
+        aria-label="Interactive disaster map"
+      ></div>
+
+      <!-- 5. Map legend -->
+      <div class="legend">
+        <span>
+          <i class="dot" style="background:#22c55e"></i>
+          LOW
+        </span>
+
+        <span>
+          <i class="dot" style="background:#eab308"></i>
+          MODERATE
+        </span>
+
+        <span>
+          <i class="dot" style="background:#f97316"></i>
+          HIGH
+        </span>
+
+        <span>
+          <i class="dot" style="background:#ef4444"></i>
+          CRITICAL
+        </span>
+
+        <span>
+          Display-only estimate; not official severity.
+        </span>
+      </div>
+    </section>
+
+    <!-- 6. Alert filters and list -->
+    <aside>
+      <h2>Find alerts</h2>
+
+      <div class="field">
+        <label for="locationFilter">
+          Location text filter
+        </label>
+
+        <input
+          id="locationFilter"
+          type="text"
+          placeholder="e.g. Salem, Namakkal, Tamil Nadu"
+        >
+      </div>
+
+      <div class="field">
+        <label for="typeFilter">
+          Alert category filter
+        </label>
+
+        <select id="typeFilter">
+          <option value="">All alert categories</option>
+          <option>Flood</option>
+          <option>Rain</option>
+          <option>Cyclone</option>
+          <option>Thunderstorm</option>
+          <option>Heat</option>
+          <option>Wind</option>
+          <option>Earthquake</option>
+          <option>Landslide</option>
+        </select>
+      </div>
+
+      <div
+        id="status"
+        class="status"
+        role="status"
+        aria-live="polite"
+      >
+        Loading official alerts…
+      </div>
+
+      <div id="alertList"></div>
+
+      <p class="small">
+        Markers are place references, not verified impact zones.
+        Display severity is inferred from wording and does not
+        replace the official alert. Follow official instructions.
+      </p>
+    </aside>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- 7. Leaflet JavaScript: load before map.js -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+
+  <!-- 8. Your map and alert logic -->
+  <script src="/static/map.js"></script>
+</body>
+</html>

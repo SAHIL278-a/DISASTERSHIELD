@@ -1,0 +1,1147 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DisasterShield AI | Emergency Dashboard</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #080d18;
+    color: #edf2ff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 5%;
+    background: #101827;
+    border-bottom: 1px solid #26344b;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #ff4655;
+}
+
+.online {
+    color: #39e58c;
+    font-size: 13px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1350px;
+    margin: 30px auto;
+}
+
+.hero {
+    padding: 35px;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #17263c, #301821);
+    border: 1px solid #34435a;
+    margin-bottom: 25px;
+}
+
+.badge {
+    display: inline-block;
+    background: #4b2029;
+    color: #ff8790;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 16px;
+}
+
+.hero h1 {
+    font-size: 34px;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #bac6da;
+    line-height: 1.7;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.card, .panel {
+    background: #111b2b;
+    border: 1px solid #27364d;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.card h3 {
+    color: #aab8ce;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.number {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.red { color: #ff5964; }
+.green { color: #39e58c; }
+.blue { color: #69a9ff; }
+.yellow { color: #ffca68; }
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 8px;
+    color: #c2cde0;
+    font-size: 14px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 13px;
+    background: #091321;
+    color: white;
+    border: 1px solid #34445c;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #ff5964;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    background: #ff4655;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 14px;
+}
+
+button:hover {
+    background: #e62d40;
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.refresh {
+    background: #263951;
+    margin-top: 0;
+}
+
+.report {
+    background: #0b1524;
+    border: 1px solid #293a51;
+    border-radius: 9px;
+    padding: 16px;
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.report p {
+    color: #aab8ce;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-top: 8px;
+}
+
+.report strong {
+    color: #ff7a84;
+    line-height: 1.6;
+}
+
+.report a {
+    display: inline-block;
+    color: #69a9ff;
+    margin-top: 12px;
+    text-decoration: none;
+}
+
+.report a:hover {
+    text-decoration: underline;
+}
+
+.empty {
+    color: #9baac0;
+    line-height: 1.7;
+}
+
+.message {
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.chart-row {
+    margin: 18px 0;
+}
+
+.chart-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #c2cde0;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.bar-track {
+    background: #091321;
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 0;
+    background: #69a9ff;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+#typeChart .bar-fill {
+    background: #ff5964;
+}
+
+.ai-result {
+    border-left: 3px solid #69a9ff;
+    padding-left: 13px;
+    margin-top: 14px;
+}
+
+.ai-result h3 {
+    margin: 12px 0;
+}
+
+.ai-result p {
+    white-space: pre-wrap;
+}
+
+footer {
+    text-align: center;
+    color: #8493aa;
+    padding: 30px 15px;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .layout, .chart-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    header {
+        padding: 18px 4%;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .online {
+        font-size: 10px;
+    }
+
+    .container {
+        width: 94%;
+        margin-top: 20px;
+    }
+
+    .hero {
+        padding: 23px;
+    }
+
+    .hero h1 {
+        font-size: 26px;
+    }
+
+    .stats {
+        gap: 10px;
+    }
+
+    .card, .panel {
+        padding: 16px;
+    }
+
+    .number {
+        font-size: 26px;
+    }
+}
+/* Disaster Risk Map Button */
+.risk-map-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 22px;
+    margin: 12px 0;
+    background: linear-gradient(135deg, #06b6d4, #2563eb);
+    color: #ffffff;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(37, 99, 235, 0.25);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.risk-map-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #0891b2, #1d4ed8);
+    box-shadow: 0 9px 25px rgba(37, 99, 235, 0.4);
+}
+
+.risk-map-btn:active {
+    transform: scale(0.97);
+}
+
+.risk-map-btn .arrow {
+    font-size: 18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🛡️ Disaster<span>Shield</span> AI</div>
+    <div class="online" id="systemStatus">● CHECKING SYSTEM</div>
+</header>
+
+<a href="/risk-map" class="risk-map-btn">
+  <span>🗺️</span>
+  <span>Open Disaster Risk Map</span>
+  <span class="arrow">↗</span>
+</a>
+
+<main class="container">
+
+<section class="hero">
+    <div class="badge">GEMMA 4 · DISASTER RESPONSE</div>
+    <h1>Emergency Management Dashboard</h1>
+    <p>
+        Monitor official disaster alerts, submit incident reports,
+        explore alert statistics, and use AI-assisted safety explanations.
+    </p>
+</section>
+
+<!-- DASHBOARD STATISTICS -->
+<section class="stats">
+
+    <div class="card">
+        <h3>Total Reports</h3>
+        <div class="number blue" id="totalReports">0</div>
+    </div>
+
+    <div class="card">
+        <h3>Pending Reports</h3>
+        <div class="number red" id="pendingReports">0</div>
+    </div>
+
+    <div class="card">
+        <h3>Live Feed Alerts</h3>
+        <div class="number yellow" id="totalAlerts">—</div>
+    </div>
+
+    <div class="card">
+        <h3>Backend Status</h3>
+        <div class="number green" id="backendStatus"
+             style="font-size:22px">Checking...</div>
+    </div>
+
+</section>
+
+<!-- CHARTS -->
+<section class="chart-grid">
+
+    <div class="panel">
+        <h2>📊 Live Alert Summary</h2>
+        <p class="empty" id="chartStatus">Waiting for official alert feed...</p>
+        <div id="typeChart"></div>
+    </div>
+
+    <div class="panel">
+        <h2>📍 Location Summary</h2>
+        <p class="empty">
+            Counts are based on location names found in alert titles
+            and descriptions. They are not geographic impact estimates.
+        </p>
+        <div id="locationChart"></div>
+    </div>
+
+</section>
+
+<!-- REPORT FORM AND RECENT REPORTS -->
+<section class="layout">
+
+    <div class="panel">
+        <h2>🚨 Submit Disaster Report</h2>
+
+        <form id="reportForm">
+
+            <label for="incidentType">Disaster Type *</label>
+            <select id="incidentType" required>
+                <option value="">Select disaster type</option>
+                <option value="Flood">Flood</option>
+                <option value="Earthquake">Earthquake</option>
+                <option value="Fire">Fire</option>
+                <option value="Cyclone">Cyclone</option>
+                <option value="Landslide">Landslide</option>
+                <option value="Accident">Major Accident</option>
+                <option value="Other">Other Emergency</option>
+            </select>
+
+            <label for="location">Location</label>
+            <input id="location" type="text"
+                   placeholder="Enter village, city or area">
+
+            <label for="description">Incident Description *</label>
+            <textarea id="description" required
+                      placeholder="Describe the incident and immediate danger..."></textarea>
+
+            <button type="submit">Submit Emergency Report</button>
+            <div class="message" id="formMessage" aria-live="polite"></div>
+
+        </form>
+    </div>
+
+    <div class="panel">
+        <div style="display:flex;justify-content:space-between;
+                    align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+            <h2 style="margin:0">📋 Recent Reports</h2>
+            <button class="refresh" id="refreshButton" type="button">
+                Refresh
+            </button>
+        </div>
+
+        <div id="reportsList">
+            <p class="empty">Loading reports...</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- OFFICIAL DISASTER ALERTS -->
+<section class="panel" style="margin-bottom:22px">
+
+    <h2>🚨 Official Disaster Alerts</h2>
+
+    <label for="alertLocation">📍 Filter by Location</label>
+    <select id="alertLocation">
+        <option value="All">All Locations</option>
+        <option value="Salem">Salem</option>
+        <option value="Namakkal">Namakkal</option>
+    </select>
+
+    <button type="button" id="filterAlerts">Apply Filter</button>
+    <button type="button" class="refresh" id="refreshAlerts">
+        🔄 Refresh Alerts
+    </button>
+
+    <p class="empty" style="margin-top:15px">
+        Source: NDMA SACHET feed through the configured backend.
+        Location filters match alert text and may not find every relevant alert.
+    </p>
+
+    <div id="alertsList" style="margin-top:20px">
+        <p class="empty">Loading official alerts...</p>
+    </div>
+
+</section>
+
+<!-- GEMMA 4 EMERGENCY ASSISTANT -->
+<section class="panel" style="margin-bottom:22px">
+
+    <h2>🤖 Gemma 4 Emergency Assistant</h2>
+
+    <p class="empty">
+        Ask for general disaster safety guidance. For active emergencies,
+        follow official alerts and instructions from local authorities.
+    </p>
+
+    <form id="assistantForm">
+
+        <label for="assistantQuestion">Your Question</label>
+        <textarea id="assistantQuestion" required maxlength="1500"
+                  placeholder="Example: What precautions should I take during a flood?"></textarea>
+
+        <label for="assistantDisaster">Disaster Type</label>
+        <select id="assistantDisaster">
+            <option value="General Emergency">General Emergency</option>
+            <option value="Flood">Flood</option>
+            <option value="Cyclone">Cyclone</option>
+            <option value="Earthquake">Earthquake</option>
+            <option value="Fire">Fire</option>
+            <option value="Landslide">Landslide</option>
+            <option value="Accident">Major Accident</option>
+        </select>
+
+        <button type="submit" id="assistantButton">
+            Ask Gemma 4
+        </button>
+
+    </form>
+
+    <div id="assistantResult" class="message" aria-live="polite"></div>
+
+    <p class="empty" style="margin-top:14px">
+        AI-generated guidance may be incomplete. It does not replace
+        emergency services or official instructions.
+    </p>
+
+</section>
+
+<!-- RISK ASSESSMENT -->
+<section class="panel">
+
+    <h2>🛡️ Disaster Risk Assessment</h2>
+
+    <p class="empty">
+        This is a prototype assessment, not an official forecasting system.
+    </p>
+
+    <form id="riskForm">
+
+        <label for="riskIncidentType">Disaster Type *</label>
+        <select id="riskIncidentType" required>
+            <option value="Flood">Flood</option>
+            <option value="Cyclone">Cyclone</option>
+            <option value="Earthquake">Earthquake</option>
+            <option value="Fire">Fire</option>
+            <option value="Landslide">Landslide</option>
+            <option value="Accident">Accident</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="rainfall">Rainfall (mm)</label>
+        <input type="number" id="rainfall" min="0" step="any" value="0" required>
+
+        <label for="windSpeed">Wind Speed (km/h)</label>
+        <input type="number" id="windSpeed" min="0" step="any" value="0" required>
+
+        <label for="waterLevel">Is Water Level Rising?</label>
+        <select id="waterLevel">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+        </select>
+
+        <label for="peopleAtRisk">People Potentially at Risk</label>
+        <input type="number" id="peopleAtRisk" min="0" step="1" value="0" required>
+
+        <button type="submit">Assess Risk</button>
+
+    </form>
+
+    <div id="riskResult" class="message" aria-live="polite"></div>
+
+    <p class="empty" style="margin-top:15px">
+        Prototype results only. Follow official alerts and emergency
+        authority instructions.
+    </p>
+
+</section>
+
+</main>
+
+<footer>
+    DisasterShield AI · Emergency Response Support System · Version 2.0
+    <br>
+    Prototype for disaster reporting and information support.
+    <br>
+    In India, call 112 for emergency assistance when needed.
+</footer>
+
+<script>
+"use strict";
+
+const API_URL = "/api/reports";
+
+const form = document.getElementById("reportForm");
+const formMessage = document.getElementById("formMessage");
+const reportsList = document.getElementById("reportsList");
+const alertsList = document.getElementById("alertsList");
+
+let allAlerts = [];
+
+// HTML escaping for report content
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+// BACKEND HEALTH
+async function checkBackend() {
+    try {
+        const response = await fetch("/health");
+
+        if (!response.ok) {
+            throw new Error("Backend unavailable");
+        }
+
+        document.getElementById("backendStatus").textContent = "Online";
+        document.getElementById("systemStatus").textContent = "● SYSTEM ONLINE";
+    } catch (error) {
+        document.getElementById("backendStatus").textContent = "Offline";
+        document.getElementById("systemStatus").textContent = "● CONNECTION ISSUE";
+    }
+}
+
+// REPORTS
+async function loadReports() {
+    reportsList.textContent = "Loading reports...";
+
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load reports");
+        }
+
+        const data = await response.json();
+        const reports = Array.isArray(data.reports) ? data.reports : [];
+
+        document.getElementById("totalReports").textContent =
+            data.total ?? reports.length;
+
+        document.getElementById("pendingReports").textContent =
+            reports.filter(report =>
+                String(report.status || "Pending").toLowerCase() === "pending"
+            ).length;
+
+        reportsList.replaceChildren();
+
+        if (!reports.length) {
+            const empty = document.createElement("p");
+            empty.className = "empty";
+            empty.textContent = "No reports submitted yet.";
+            reportsList.appendChild(empty);
+            return;
+        }
+
+        reports.forEach(report => {
+            const card = document.createElement("div");
+            card.className = "report";
+
+            const title = document.createElement("strong");
+            title.textContent =
+                "#" + report.id + " — " + (report.incident_type || "Incident");
+
+            const details = document.createElement("p");
+            details.textContent =
+                "Location: " + (report.location || "Not provided") +
+                "\nDescription: " + (report.description || "Not provided") +
+                "\nStatus: " + (report.status || "Pending") +
+                "\nReported: " + (report.created_at || "Unavailable");
+            details.style.whiteSpace = "pre-line";
+
+            card.append(title, details);
+            reportsList.appendChild(card);
+        });
+
+    } catch (error) {
+        reportsList.textContent =
+            "Unable to load reports. Check the Flask server.";
+        document.getElementById("totalReports").textContent = "—";
+        document.getElementById("pendingReports").textContent = "—";
+    }
+}
+
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const payload = {
+        incident_type: document.getElementById("incidentType").value,
+        location: document.getElementById("location").value.trim(),
+        description: document.getElementById("description").value.trim()
+    };
+
+    formMessage.textContent = "Submitting report...";
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Submission failed");
+        }
+
+        formMessage.style.color = "#39e58c";
+        formMessage.textContent =
+            "Report submitted successfully. ID: " + result.report_id;
+
+        form.reset();
+        await loadReports();
+
+    } catch (error) {
+        formMessage.style.color = "#ff5964";
+        formMessage.textContent = "Submission failed: " + error.message;
+    }
+});
+
+document.getElementById("refreshButton").addEventListener("click", loadReports);
+
+// LIVE ALERTS
+async function loadAlerts() {
+    alertsList.textContent = "Loading live disaster alerts...";
+
+    try {
+        const response = await fetch("/api/live-alerts");
+
+        if (!response.ok) {
+            throw new Error("Official alert feed unavailable");
+        }
+
+        const data = await response.json();
+
+        if (!data.live_data) {
+            throw new Error(data.error || "No live feed data");
+        }
+
+        allAlerts = Array.isArray(data.alerts) ? data.alerts : [];
+
+        document.getElementById("totalAlerts").textContent =
+            data.total ?? allAlerts.length;
+
+        document.getElementById("chartStatus").textContent =
+            "Feed: " + (data.source || "Configured official source") +
+            " · Alerts received: " + allAlerts.length;
+
+        displayAlerts();
+        renderCharts();
+
+    } catch (error) {
+        allAlerts = [];
+        document.getElementById("totalAlerts").textContent = "Unavailable";
+        document.getElementById("chartStatus").textContent =
+            "Live statistics unavailable because the feed could not be loaded.";
+
+        alertsList.textContent = "Live alerts unavailable: " + error.message;
+        renderCharts();
+    }
+}
+
+function getFilteredAlerts() {
+    const selected = document.getElementById("alertLocation").value;
+
+    if (selected === "All") {
+        return allAlerts;
+    }
+
+    return allAlerts.filter(alert => {
+        const text = (
+            (alert.title || "") + " " + (alert.description || "")
+        ).toLowerCase();
+
+        return text.includes(selected.toLowerCase());
+    });
+}
+
+function displayAlerts() {
+    alertsList.replaceChildren();
+
+    const selected = document.getElementById("alertLocation").value;
+    const alerts = getFilteredAlerts();
+
+    const summary = document.createElement("p");
+    summary.className = "empty";
+    summary.textContent =
+        alerts.length + " matching alert(s) for " + selected;
+    alertsList.appendChild(summary);
+
+    if (!alerts.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent =
+            "No matching alerts found. Try All Locations.";
+        alertsList.appendChild(empty);
+        return;
+    }
+
+    alerts.forEach(alert => {
+        const card = document.createElement("div");
+        card.className = "report";
+
+        const title = document.createElement("strong");
+        title.textContent = alert.title || "Disaster Alert";
+
+        const published = document.createElement("p");
+        published.textContent =
+            "Published: " + (alert.published || "Not specified");
+
+        const source = document.createElement("p");
+        source.textContent =
+            "Source: " + (alert.source || "Official alert feed");
+
+        card.append(title, published, source);
+
+        if (alert.description) {
+            const description = document.createElement("p");
+            description.textContent = alert.description;
+            card.appendChild(description);
+        }
+
+        if (alert.link) {
+            const link = document.createElement("a");
+            link.href = alert.link;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "View Official Alert ↗";
+            card.appendChild(link);
+        }
+
+        // GEMMA 4 ALERT EXPLANATION
+        const aiButton = document.createElement("button");
+        aiButton.type = "button";
+        aiButton.textContent = "🧠 Explain with Gemma 4";
+
+        const aiResult = document.createElement("div");
+        aiResult.className = "message ai-result";
+        aiResult.setAttribute("aria-live", "polite");
+
+        aiButton.addEventListener("click", async function() {
+            aiButton.disabled = true;
+            aiButton.textContent = "Analyzing...";
+            aiResult.textContent = "Gemma 4 is analyzing the alert...";
+
+            try {
+                const response = await fetch("/api/ai/analyze-alert", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        title: alert.title || "",
+                        description: alert.description || "",
+                        location: selected === "All" ? "" : selected
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || "AI analysis failed.");
+                }
+
+                aiResult.replaceChildren();
+
+                const heading = document.createElement("h3");
+                heading.textContent = "Gemma 4 Analysis";
+
+                const analysis = document.createElement("p");
+                analysis.textContent = data.analysis || "No analysis returned.";
+
+                const notice = document.createElement("p");
+                notice.textContent = data.notice ||
+                    "Follow the original official alert and local authorities.";
+
+                aiResult.append(heading, analysis, notice);
+
+            } catch (error) {
+                aiResult.textContent = error.message;
+            } finally {
+                aiButton.disabled = false;
+                aiButton.textContent = "🧠 Explain with Gemma 4";
+            }
+        });
+
+        card.append(aiButton, aiResult);
+        alertsList.appendChild(card);
+    });
+}
+
+document.getElementById("refreshAlerts").addEventListener("click", loadAlerts);
+document.getElementById("filterAlerts").addEventListener("click", displayAlerts);
+document.getElementById("alertLocation").addEventListener("change", function() {
+    displayAlerts();
+    renderCharts();
+});
+
+// DASHBOARD CHARTS
+function renderBarChart(containerId, entries, emptyText) {
+    const container = document.getElementById(containerId);
+    container.replaceChildren();
+
+    if (!entries.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = emptyText;
+        container.appendChild(empty);
+        return;
+    }
+
+    const maximum = Math.max(...entries.map(entry => entry.count), 1);
+
+    entries.forEach(entry => {
+        const row = document.createElement("div");
+        row.className = "chart-row";
+
+        const label = document.createElement("div");
+        label.className = "chart-label";
+
+        const name = document.createElement("span");
+        name.textContent = entry.name;
+
+        const count = document.createElement("strong");
+        count.textContent = entry.count;
+
+        label.append(name, count);
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const fill = document.createElement("div");
+        fill.className = "bar-fill";
+        fill.style.width = (entry.count / maximum * 100) + "%";
+
+        track.appendChild(fill);
+        row.append(label, track);
+        container.appendChild(row);
+    });
+}
+
+function renderCharts() {
+    const alerts = getFilteredAlerts();
+
+    // Categories are inferred from alert text, not official classifications.
+    const categories = [
+        {name: "Flood", words: ["flood", "inundation"]},
+        {name: "Rain", words: ["rain", "rainfall", "thunderstorm"]},
+        {name: "Cyclone / Wind", words: ["cyclone", "wind", "storm"]},
+        {name: "Landslide", words: ["landslide", "mudslide"]},
+        {name: "Earthquake", words: ["earthquake", "seismic"]},
+        {name: "Heat", words: ["heatwave", "heat wave", "high temperature"]}
+    ];
+
+    const textOf = alert =>
+        ((alert.title || "") + " " + (alert.description || "")).toLowerCase();
+
+    const categoryCounts = categories.map(category => ({
+        name: category.name,
+        count: alerts.filter(alert =>
+            category.words.some(word => textOf(alert).includes(word))
+        ).length
+    })).filter(item => item.count > 0);
+
+    renderBarChart(
+        "typeChart",
+        categoryCounts,
+        "No category matches found in the current alert text."
+    );
+
+    const places = ["Salem", "Namakkal"];
+
+    const locationCounts = places.map(place => ({
+        name: place,
+        count: alerts.filter(alert => textOf(alert).includes(place.toLowerCase())).length
+    }));
+
+    renderBarChart(
+        "locationChart",
+        locationCounts,
+        "No location statistics available."
+    );
+}
+
+// GEMMA 4 EMERGENCY ASSISTANT
+document.getElementById("assistantForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const question = document.getElementById("assistantQuestion").value.trim();
+        const disaster = document.getElementById("assistantDisaster").value;
+        const result = document.getElementById("assistantResult");
+        const button = document.getElementById("assistantButton");
+
+        if (!question) return;
+
+        result.textContent = "Contacting Gemma 4...";
+        button.disabled = true;
+
+        try {
+            /*
+             * This endpoint must be implemented in app.py.
+             * It is intentionally not redirected to the alert-analysis endpoint.
+             */
+            const response = await fetch("/api/ai/emergency-assistant", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    question: question,
+                    disaster_type: disaster
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.success === false) {
+                throw new Error(
+                    data.error ||
+                    "Emergency Assistant endpoint is not available yet."
+                );
+            }
+
+            result.replaceChildren();
+
+            const heading = document.createElement("h3");
+            heading.textContent = "Gemma 4 Guidance";
+
+            const answer = document.createElement("p");
+            answer.textContent =
+                data.answer || data.analysis || "No answer was returned.";
+
+            result.append(heading, answer);
+
+        } catch (error) {
+            result.textContent =
+                error.message +
+                " Use the official alert links for verified instructions.";
+        } finally {
+            button.disabled = false;
+        }
+    }
+);
+
+// RISK ASSESSMENT
+document.getElementById("riskForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const result = document.getElementById("riskResult");
+        result.textContent = "Assessing prototype risk...";
+
+        const payload = {
+            incident_type: document.getElementById("riskIncidentType").value,
+            rainfall_mm: Number(document.getElementById("rainfall").value),
+            wind_speed_kmh: Number(document.getElementById("windSpeed").value),
+            water_level_rising:
+                document.getElementById("waterLevel").value === "true",
+            people_at_risk: Number(document.getElementById("peopleAtRisk").value)
+        };
+
+        try {
+            const response = await fetch("/api/risk-assessment", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Risk assessment failed");
+            }
+
+            result.replaceChildren();
+
+            const heading = document.createElement("h3");
+            heading.textContent = "Risk Level: " + data.risk_level;
+
+            const score = document.createElement("p");
+            score.textContent =
+                "Prototype Risk Score: " + data.risk_score + "/100";
+
+            const message = document.createElement("p");
+            message.textContent = data.message || "";
+
+            const listHeading = document.createElement("h4");
+            listHeading.textContent = "Recommendations";
+
+            const list = document.createElement("ul");
+
+            (Array.isArray(data.recommendations) ? data.recommendations : [])
+                .forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    li.style.marginTop = "8px";
+                    list.appendChild(li);
+                });
+
+            result.append(heading, score, message, listHeading, list);
+
+        } catch (error) {
+            result.textContent = "Error: " + error.message;
+        }
+    }
+);
+
+// INITIAL LOAD
+checkBackend();
+loadReports();
+loadAlerts();
+</script>
+
+</body>
+</html>
+```
